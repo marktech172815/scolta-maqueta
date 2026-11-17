@@ -1,4 +1,4 @@
-/* Scolta · maqueta guiada para eventos. Todo es simulado y funciona sin internet. */
+/* Skolta · maqueta guiada para eventos. Todo es simulado y funciona sin internet. */
 (() => {
   'use strict';
 
@@ -68,9 +68,9 @@
 
   // ---------- Mapa ilustrativo (no es cartografía real) ----------
   // Todo lo importante va en la mitad de arriba: abajo flotan las tarjetas.
-  const ROUTE_SCOLTA = 'M262 102 C 228 122, 196 136, 180 166 C 166 192, 160 220, 166 248 C 172 276, 186 304, 198 324 C 208 340, 218 348, 232 352';
+  const ROUTE_SKOLTA = 'M262 102 C 228 122, 196 136, 180 166 C 166 192, 160 220, 166 248 C 172 276, 186 304, 198 324 C 208 340, 218 348, 232 352';
   const ROUTE_GPS = 'M262 102 C 268 150, 266 200, 262 235 C 258 262, 254 278, 252 290 C 250 318, 242 336, 232 352';
-  function mapSvg({ showGps = false, showScolta = false, dimGps = false, extra = '', view = '0 30 400 700', fit = 'xMidYMin meet' } = {}) {
+  function mapSvg({ showGps = false, showSkolta = false, dimGps = false, extra = '', view = '0 30 400 700', fit = 'xMidYMin meet' } = {}) {
     return `
     <svg class="map" viewBox="${view}" preserveAspectRatio="${fit}" aria-label="Mapa ilustrativo de la ruta">
       <defs>
@@ -89,10 +89,10 @@
         <text x="70" y="318" font-size="10" opacity="0.6">río Itata</text>
       </g>
       ${showGps ? `<path id="gps" d="${ROUTE_GPS}" fill="none" stroke="#B6BBC2" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round" opacity="${dimGps ? 0.35 : 0.9}"/>` : ''}
-      ${showScolta ? `<path d="${ROUTE_SCOLTA}" fill="none" stroke="#08171C" stroke-width="10" stroke-linecap="round"/><path id="scolta" d="${ROUTE_SCOLTA}" fill="none" stroke="#CEDC00" stroke-width="6" stroke-linecap="round"/>` : ''}
+      ${showSkolta ? `<path d="${ROUTE_SKOLTA}" fill="none" stroke="#08171C" stroke-width="10" stroke-linecap="round"/><path id="skolta" d="${ROUTE_SKOLTA}" fill="none" stroke="#CEDC00" stroke-width="6" stroke-linecap="round"/>` : ''}
       ${showGps ? `<g id="m-bridge" transform="translate(253 288)"><circle r="17" fill="#B82235" stroke="#FF8585" stroke-width="2"/><text y="4.5" text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#fff">15 t</text></g>
         <text x="276" y="276" font-family="Outfit" font-size="11" fill="#FF8585">Puente</text><text x="276" y="290" font-family="Outfit" font-size="11" fill="#FF8585">El Estero</text>` : ''}
-      ${showScolta ? `<g transform="translate(164 222)"><circle r="13" fill="#3a2e10" stroke="#F6B23E" stroke-width="2"/><path d="M-6 5 L-1 -5 L2 0 L4 -3 L8 5Z" fill="#F6B23E"/></g>
+      ${showSkolta ? `<g transform="translate(164 222)"><circle r="13" fill="#3a2e10" stroke="#F6B23E" stroke-width="2"/><path d="M-6 5 L-1 -5 L2 0 L4 -3 L8 5Z" fill="#F6B23E"/></g>
         <text x="144" y="226" text-anchor="end" font-family="Outfit" font-size="11" fill="#F6B23E">Cuesta Quilmo</text>` : ''}
       <g id="m-dest" transform="translate(232 352)"><circle r="9" fill="#0FA79A" stroke="#fff" stroke-width="2"/></g>
       <text x="246" y="370" font-family="Outfit" font-size="12" fill="#E6E9EC">Planta El Carmen</text>
@@ -102,7 +102,7 @@
 
   // ---------- Pantallas ----------
   const truck = { name: 'Tractocamión', plate: 'BXTR-21', measures: '4,2 × 2,6 × 18,6 m', weight: '45 t', axles: '5 ejes', trailer: 'Semirremolque' };
-  // Partes de la ruta Scolta (0 a 1): donde parte la navegación, donde está la Cuesta Quilmo
+  // Partes de la ruta Skolta (0 a 1): donde parte la navegación, donde está la Cuesta Quilmo
   // y donde el camión se detiene y aparece la emergencia. La ruta mide 32 km.
   const START_AT = 0.4;
   const QUILMO_AT = 0.516;
@@ -137,7 +137,7 @@
       render: () => `
         <section class="screen story">
           <div class="story-body">
-            <div class="wordmark">SCOLTA</div>
+            <div class="wordmark">SKOLTA</div>
             <h1>La escolta digital del <strong>transporte pesado</strong></h1>
             <p class="lead">Guía, protege y monitorea a camiones y buses en ruta, con las medidas reales de cada vehículo.</p>
           </div>
@@ -182,7 +182,7 @@
           <div class="story-body">
             <span class="eyebrow">La pregunta correcta</span>
             <h1>¿Puede <strong>este</strong> camión pasar por aquí?</h1>
-            <p class="lead">No basta con la ruta más rápida. Scolta revisa si este vehículo, con sus medidas y su carga, puede transitar de forma segura, legal y controlada.</p>
+            <p class="lead">No basta con la ruta más rápida. Skolta revisa si este vehículo, con sus medidas y su carga, puede transitar de forma segura, legal y controlada.</p>
             <div class="card accent row">
               <span class="badge-icon">${icon('shield')}</span>
               <p style="color:var(--niebla)">Perfil del vehículo + base territorial de puntos críticos + comunidad de conductores.</p>
@@ -208,7 +208,7 @@
               <span class="chip">Ancho 2,6 m</span><span class="chip">Giro 12,5 m</span><span class="chip">Carga general</span>
             </div>
           </div>
-          <p class="muted" style="margin-top:16px">Scolta usa estas medidas en cada ruta: alto, ancho, largo, peso, ejes, radio de giro y tipo de carga. Si algo no cabe o no soporta el peso, esa ruta no se ofrece.</p>
+          <p class="muted" style="margin-top:16px">Skolta usa estas medidas en cada ruta: alto, ancho, largo, peso, ejes, radio de giro y tipo de carga. Si algo no cabe o no soporta el peso, esa ruta no se ofrece.</p>
           <div class="grow"></div>
           <button class="btn pulse" data-next>Usar este vehículo<span class="btn__badge">${icon('next')}</span></button>
         </section>`,
@@ -252,14 +252,14 @@
       render: () => `
         <section class="screen">
           <div class="phone-ui">
-            <div class="map-wrap">${mapSvg({ showGps: true, showScolta: true })}<span class="map-label">Mapa ilustrativo · Ñuble</span></div>
+            <div class="map-wrap">${mapSvg({ showGps: true, showSkolta: true })}<span class="map-label">Mapa ilustrativo · Ñuble</span></div>
             <div class="overlay-bottom">
               <div class="card bad stack alert-pop">
                 <div class="row between"><span class="route-title">GPS común · 38 min</span><span class="chip bad">${icon('x')} No apta</span></div>
                 <p class="small" style="color:var(--niebla)">Cruza el <b>Puente El Estero, máximo 15 t</b>. Su camión pesa 45 t.</p>
               </div>
               <div class="card accent stack alert-pop route-card" data-next style="animation-delay:.25s">
-                <div class="row between"><span class="route-title">Ruta Scolta · 44 min</span><span class="chip ok">${icon('check')} Compatible</span></div>
+                <div class="row between"><span class="route-title">Ruta Skolta · 44 min</span><span class="chip ok">${icon('check')} Compatible</span></div>
                 <p class="small compact-hide" style="color:var(--niebla)">Evita el puente. 1 alerta preventiva en el camino: Cuesta Quilmo.</p>
                 <button class="btn pulse" data-next style="min-height:50px">Iniciar navegación<span class="btn__badge">${icon('arrow')}</span></button>
               </div>
@@ -274,7 +274,7 @@
       render: () => `
         <section class="screen">
           <div class="phone-ui">
-            <div class="map-wrap">${mapSvg({ showGps: true, showScolta: true, dimGps: true })}
+            <div class="map-wrap">${mapSvg({ showGps: true, showSkolta: true, dimGps: true })}
               <svg class="map map-top" viewBox="0 30 400 700" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><g id="truck"><circle r="13" fill="#0FA79A" stroke="#fff" stroke-width="2.5"/><path d="M0 -7 L5 5 L0 2 L-5 5Z" fill="#fff"/></g></svg>
             </div>
             <div class="overlay-top" style="padding-top:6px">
@@ -287,7 +287,7 @@
           </div>
         </section>`,
       enter: () => {
-        const path = document.getElementById('scolta');
+        const path = document.getElementById('skolta');
         const truckEl = document.getElementById('truck');
         const total = path.getTotalLength();
         const duration = 17000;
@@ -342,7 +342,7 @@
           </div>
           <div id="sheet" class="stack" style="margin-top:14px"></div>
           <div class="grow"></div>
-          <p class="muted small" style="margin-top:12px">Scolta no reemplaza a los servicios de emergencia: acelera la coordinación y deja todo registrado.</p>
+          <p class="muted small" style="margin-top:12px">Skolta no reemplaza a los servicios de emergencia: acelera la coordinación y deja todo registrado.</p>
         </section>`,
       enter: () => {
         const pick = (button) => {
@@ -383,7 +383,7 @@
             <div class="kpi"><div class="num">0</div><div class="muted small">rutas no aptas</div></div>
           </div>
           <div class="fleet-map">
-            ${mapSvg({ showScolta: true, view: '40 60 330 330', fit: 'xMidYMid slice', extra: `
+            ${mapSvg({ showSkolta: true, view: '40 60 330 330', fit: 'xMidYMid slice', extra: `
               <g transform="translate(306 150)"><circle r="9" fill="#0FA79A" stroke="#fff" stroke-width="2"/></g>
               <g transform="translate(110 250)"><circle r="9" fill="#0FA79A" stroke="#fff" stroke-width="2"/></g>
               <g transform="translate(318 296)"><circle r="9" fill="#0FA79A" stroke="#fff" stroke-width="2"/></g>
@@ -398,7 +398,7 @@
         </section>`,
       enter: () => {
         // El incidente queda justo donde se detuvo el camión en la navegación.
-        const path = document.getElementById('scolta');
+        const path = document.getElementById('skolta');
         const p = path.getPointAtLength(path.getTotalLength() * STOP_AT);
         document.getElementById('incident').setAttribute('transform', `translate(${p.x} ${p.y})`);
       },
@@ -428,7 +428,7 @@
       render: () => `
         <section class="screen story" style="text-align:center;align-items:center">
           <div class="story-body" style="align-items:center">
-            <div class="wordmark">SCOLTA</div>
+            <div class="wordmark">SKOLTA</div>
             <h2>Piloto en <strong>Ñuble</strong></h2>
             <p class="lead">Rutas compatibles, alertas preventivas, reportes de conductores, panel de empresa y botón de pánico, validados en terreno.</p>
           </div>
@@ -457,7 +457,7 @@
     const screen = screens[index];
     app.innerHTML = `
       <header class="topbar">
-        <div class="brand">SCOLTA</div>
+        <div class="brand">SKOLTA</div>
         <div class="progress" aria-label="Paso ${index + 1} de ${screens.length}">${screens.map((_, i) => `<span class="${i <= index ? 'on' : ''}"></span>`).join('')}</div>
         <button class="icon-btn" id="sound" aria-label="${soundOn ? 'Silenciar voz' : 'Activar voz'}">${icon(soundOn ? 'sound' : 'mute')}</button>
         <button class="icon-btn" data-restart aria-label="Volver al inicio">${icon('restart')}</button>

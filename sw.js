@@ -1,8 +1,8 @@
 // Keeps every file of the mockup on the device, so it runs at the event without internet.
 // Each version is stored whole under its own name: change VERSION whenever any file changes,
 // so phones download the new set in one piece and never mix old and new files.
-const VERSION = 'v6';
-const CACHE = `scolta-maqueta-${VERSION}`;
+const VERSION = 'v7';
+const CACHE = `skolta-maqueta-${VERSION}`;
 const FILES = [
   './',
   'index.html',
