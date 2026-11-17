@@ -1,0 +1,325 @@
+/* Scolta · maqueta para eventos. Mismo tema de la app (Petróleo mate): superficies planas de petróleo sobre grafito,
+   sin vidrio, brillos ni bordes claros. Colores iguales a tokens.css y Color.kt del proyecto. Sin dependencias externas. */
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("fonts/outfit-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("fonts/outfit-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Russo One: solo para el nombre de la marca. */
+@font-face {
+  font-family: "Russo One";
+  font-style: normal;
+  font-display: block;
+  font-weight: 400;
+  src: url("fonts/russo-one-regular.ttf") format("truetype");
+}
+
+:root {
+  color-scheme: dark;
+  /* Primitivos de marca */
+  --petroleo: #0F637A;
+  --petroleo-oscuro: #083446;
+  --acero: #417886;
+  --gris-profundo: #2C3D4A;
+  --grafito: #1A1D21;
+  --plata: #B6BBC2;
+  --niebla: #E6E9EC;
+  --teal: #0FA79A;
+  --teal-claro: #13B3A5;
+  --amber: #F6B23E;
+  --coral: #FF8585;
+  --rojo: #B82235;
+  --verde: #34D69A;
+  --lima: #CEDC00;
+
+  /* Roles */
+  --panel: var(--petroleo-oscuro);
+  --panel-alt: var(--gris-profundo);
+  --border: rgb(65 120 134 / 30%);
+  --border-subtle: rgb(65 120 134 / 18%);
+  --selected-fill: rgb(15 167 154 / 18%);
+  --selected-border: rgb(15 167 154 / 45%);
+  /* Avisos: el tono al 14 % sobre grafito, ya resuelto a color opaco (web .alert). */
+  --alert-info: #183032;
+  --alert-danger: #3A2C2F;
+  --alert-warning: #393225;
+  --map-shadow: 0 4px 14px rgb(0 0 0 / 45%);
+  --shadow-lg: 0 30px 60px -20px rgb(0 0 0 / 65%), 0 2px 6px -2px rgb(0 0 0 / 45%);
+  --font-brand: "Russo One", "Outfit", "Segoe UI", system-ui, sans-serif;
+  --pill: 999px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--grafito);
+  color: var(--niebla);
+  font-family: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+button { font: inherit; color: inherit; }
+
+/* El "teléfono": a pantalla completa en un celular, centrado en tablet o computador. */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--grafito);
+}
+@media (min-width: 700px) and (min-height: 760px) {
+  body { background: #141619; }
+  .app {
+    height: min(920px, calc(100dvh - 48px));
+    margin-top: max(24px, calc((100dvh - 920px) / 2));
+    border-radius: 40px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+/* Barra superior: marca, avance, voz y reinicio. */
+.topbar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(14px + var(--safe-top)) 18px 10px;
+}
+.brand { font-family: var(--font-brand); font-size: 19px; font-weight: 400; letter-spacing: 0.06em; color: var(--niebla); }
+.progress { flex: 1; display: flex; gap: 4px; justify-content: center; }
+.progress span { height: 3px; flex: 1; max-width: 26px; border-radius: 2px; background: var(--border); transition: background 0.4s; }
+.progress span.on { background: var(--teal); }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: var(--pill); border: 0;
+  display: grid; place-items: center;
+  background: var(--panel); color: var(--niebla); cursor: pointer;
+  transition: background-color 0.18s var(--ease);
+}
+.icon-btn:active { background: var(--panel-alt); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+.screen {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 22px calc(22px + var(--safe-bottom));
+  overflow-y: auto;
+  scrollbar-width: none;
+  animation: enter 0.55s var(--ease) both;
+}
+.screen::-webkit-scrollbar { display: none; }
+@keyframes enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.screen.story { justify-content: center; gap: 22px; }
+.grow { flex: 1; }
+.story-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+
+.eyebrow { font-size: 0.8125rem; font-weight: 500; color: var(--plata); }
+h1, h2 { margin: 0; letter-spacing: -0.025em; line-height: 1.08; }
+h1 { font-size: clamp(2.6rem, 11vw, 3.4rem); font-weight: 200; }
+h2 { font-size: clamp(1.9rem, 8.4vw, 2.4rem); font-weight: 300; }
+h1 strong, h2 strong { font-weight: 500; color: var(--teal-claro); }
+p { margin: 0; line-height: 1.55; color: var(--plata); }
+.lead { font-size: 1.05rem; }
+
+/* Botón principal: píldora petróleo sin borde; la flecha va en un círculo al final que se vuelve teal al tocar. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 12px;
+  width: 100%; min-height: 54px; padding: 0 7px 0 24px;
+  border: 0; border-radius: var(--pill);
+  background: var(--petroleo); color: var(--niebla);
+  font-weight: 500; font-size: 1rem; text-align: left; cursor: pointer;
+  transition: background-color 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.btn svg { width: 20px; height: 20px; }
+.btn__badge {
+  flex: none; display: grid; place-items: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--petroleo-oscuro); color: var(--niebla);
+  transition: background-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+.btn__badge svg { width: 18px; height: 18px; }
+.btn:active { background: var(--petroleo-oscuro); transform: translateY(1px); }
+.btn:active .btn__badge { background: var(--teal); color: var(--grafito); }
+@media (hover: hover) {
+  .btn:hover { background: var(--petroleo-oscuro); }
+  .btn:hover .btn__badge { background: var(--teal); color: var(--grafito); }
+}
+/* Invita a tocar sin brillos: el círculo pasa a teal de vez en cuando, como al pulsarlo. */
+.btn.pulse .btn__badge { animation: badge 2.4s var(--ease) infinite; }
+@keyframes badge {
+  0%, 50%, 100% { background: var(--petroleo-oscuro); color: var(--niebla); }
+  65%, 85% { background: var(--teal); color: var(--grafito); }
+}
+/* Secundario: solo texto; gris profundo al tocar. */
+.btn.ghost { justify-content: center; padding: 0 24px; background: transparent; color: var(--plata); }
+.btn.ghost:active { background: var(--gris-profundo); color: var(--niebla); }
+/* Peligro: rojo suave con texto coral. */
+.btn.danger {
+  justify-content: center; gap: 10px; padding: 0 24px;
+  border: 1px solid rgb(255 133 133 / 40%);
+  background: rgb(184 34 53 / 14%); color: var(--coral);
+}
+.btn.danger:active { background: rgb(184 34 53 / 55%); color: #fff; }
+
+/* Tarjetas planas de petróleo, sin borde ni desenfoque. */
+.card {
+  position: relative;
+  border-radius: 24px;
+  padding: 18px;
+  background: var(--panel);
+}
+.card.strong { background: var(--panel); }
+.card.accent { background: var(--alert-info); }
+.card.bad, .card.incident { background: var(--alert-danger); }
+.card.warn { background: var(--alert-warning); }
+.row { display: flex; align-items: center; gap: 12px; }
+.between { justify-content: space-between; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.muted { color: var(--plata); font-size: 0.85rem; }
+.small { font-size: 0.78rem; }
+.num { font-weight: 200; font-size: 2rem; letter-spacing: -0.04em; color: var(--niebla); font-variant-numeric: tabular-nums; }
+.num small { font-size: 0.9rem; color: var(--plata); margin-left: 2px; }
+
+/* Etiquetas: el tono suave de fondo y el texto en el tono, sin borde. */
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: var(--pill); font-size: 0.76rem; font-weight: 600; background: var(--panel-alt); color: var(--niebla); }
+.chip.ok { color: var(--verde); background: rgb(52 214 154 / 16%); }
+.chip.bad { color: var(--coral); background: rgb(255 133 133 / 16%); }
+.chip.warn { color: var(--amber); background: rgb(246 178 62 / 16%); }
+.chip svg { width: 14px; height: 14px; }
+
+/* Ícono redondo: petróleo sólido con el ícono en niebla (SkoltaIconTile). */
+.badge-icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--petroleo); color: var(--niebla); }
+.badge-icon.bad { background: var(--rojo); color: #fff; }
+.badge-icon.warn { background: rgb(246 178 62 / 16%); color: var(--amber); }
+.badge-icon svg { width: 22px; height: 22px; }
+
+.list { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.list li { display: flex; gap: 14px; align-items: flex-start; }
+.list li p { color: var(--niebla); }
+.list li p span { display: block; color: var(--plata); font-size: 0.88rem; margin-top: 2px; }
+
+/* El nombre de la marca en Russo One, sin ícono al lado. */
+.wordmark { font-family: var(--font-brand); font-size: 2.1rem; font-weight: 400; letter-spacing: 0.06em; line-height: 1; color: var(--niebla); }
+
+/* Ilustración del problema */
+.scene { flex: none; width: 100%; height: auto; border-radius: 24px; background: var(--panel); }
+
+/* La app del conductor dentro de la maqueta */
+.phone-ui { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; margin: 0 -22px calc(-22px - var(--safe-bottom)); }
+.map-wrap { position: absolute; inset: 0; overflow: hidden; }
+.map { width: 100%; height: 100%; display: block; }
+/* El mapa queda quieto en su propia capa; solo la capa del camión se redibuja en cada cuadro. */
+.map-wrap > .map:first-child { will-change: transform; }
+.map-top { position: absolute; inset: 0; pointer-events: none; }
+/* Sobre el mapa todo es superficie sólida con una sombra corta, como en la app. */
+.phone-ui .card, .phone-ui .nav-foot, .phone-ui .search, .phone-ui .nav-head { box-shadow: var(--map-shadow); }
+.map-label { position: absolute; left: 14px; top: 10px; font-size: 0.68rem; color: var(--plata); background: var(--panel); padding: 4px 10px; border-radius: var(--pill); }
+.overlay-top { position: relative; z-index: 2; padding: 4px 16px 0; }
+.overlay-bottom { position: relative; z-index: 2; margin-top: auto; padding: 0 16px calc(16px + var(--safe-bottom)); display: flex; flex-direction: column; gap: 10px; }
+.search { display: flex; align-items: center; gap: 10px; height: 54px; padding: 0 18px; border-radius: var(--pill); background: var(--panel); }
+.search svg { width: 18px; height: 18px; color: var(--plata); }
+.caret { display: inline-block; width: 2px; height: 1.1em; background: var(--teal-claro); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.result { cursor: pointer; }
+.route-card { cursor: pointer; transition: transform 0.2s; }
+.route-card:active { transform: scale(0.98); }
+.route-title { font-weight: 500; font-size: 1rem; color: var(--niebla); }
+/* Pánico: rojo sólido, sin borde ni halo. */
+.panic {
+  position: absolute; right: 16px; z-index: 3; top: 104px;
+  width: 58px; height: 58px; border-radius: 50%; border: 0;
+  background: var(--rojo); color: #fff;
+  display: grid; place-items: center; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.06em;
+  box-shadow: var(--map-shadow); cursor: pointer;
+}
+.panic.ready { animation: panic 1.6s ease-in-out infinite; }
+@keyframes panic { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+/* Instrucción de giro: tarjeta petróleo con el ícono en una baldosa (InstructionCard). */
+.nav-head { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 28px; background: var(--panel); }
+.nav-tile { flex: none; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: var(--petroleo); color: var(--niebla); }
+.nav-tile svg { width: 32px; height: 32px; }
+.nav-head .dist { font-size: 1.9rem; font-weight: 300; line-height: 1.1; }
+.nav-foot { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-radius: 28px; background: var(--panel); }
+.alert-pop { animation: pop 0.5s var(--ease) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: none; } }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice { min-height: 64px; border-radius: 18px; padding: 10px; background: var(--panel-alt); border: 1px solid transparent; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; cursor: pointer; text-align: left; font-size: 0.9rem; }
+.choice svg { width: 20px; height: 20px; color: var(--coral); }
+.choice.pick { border-color: var(--selected-border); background: var(--selected-fill); }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 0.86rem; }
+.facts dt { color: var(--plata); }
+.facts dd { margin: 0; color: var(--niebla); }
+.sent { display: flex; align-items: center; gap: 8px; color: var(--verde); font-size: 0.9rem; font-weight: 500; }
+.sent svg { width: 18px; height: 18px; }
+
+/* Panel empresa */
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpi { padding: 12px; border-radius: 18px; background: var(--panel); }
+.kpi .num { font-size: 1.6rem; }
+.kpi.bad .num { color: var(--coral); }
+.fleet-map { flex: 1; min-height: 170px; margin: 12px 0; border-radius: 24px; overflow: hidden; position: relative; }
+
+/* Capas del producto */
+.layers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.layer { padding: 14px; border-radius: 20px; background: var(--panel); display: flex; flex-direction: column; gap: 8px; animation: enter 0.55s var(--ease) both; }
+.layer svg { width: 22px; height: 22px; color: var(--teal-claro); }
+.layer b { font-weight: 500; font-size: 0.95rem; }
+.layer span { color: var(--plata); font-size: 0.8rem; line-height: 1.4; }
+.disclaimer { text-align: center; font-size: 0.72rem; color: rgb(182 187 194 / 70%); }
+
+.app.vitrina .screen { padding-bottom: calc(36px + var(--safe-bottom)); }
+.app.vitrina .overlay-bottom { padding-bottom: calc(30px + var(--safe-bottom)); }
+.hint { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(10px + var(--safe-bottom)); font-size: 0.7rem; color: rgb(182 187 194 / 60%); z-index: 4; white-space: nowrap; }
+
+/* Teléfonos de pantalla baja: todo más compacto para que nada quede bajo el borde. */
+@media (max-height: 700px) {
+  .screen { padding-top: 4px; }
+  .screen.story, .story-body { gap: 14px; }
+  h1 { font-size: 2.3rem; }
+  h2 { font-size: 1.75rem; }
+  .wordmark { font-size: 1.7rem; }
+  .card { padding: 13px 15px; border-radius: 20px; }
+  .stack { gap: 8px; }
+  .btn { min-height: 48px; padding-left: 20px; }
+  .btn__badge { width: 36px; height: 36px; }
+  .list { gap: 10px; }
+  .list li p span { display: none; }
+  .badge-icon { width: 38px; height: 38px; }
+  .nav-tile { width: 48px; height: 48px; border-radius: 16px; }
+  .nav-tile svg { width: 28px; height: 28px; }
+  .choice { min-height: 48px; padding: 8px 12px; flex-direction: row; align-items: center; gap: 10px; }
+  .facts { gap: 3px 12px; font-size: 0.8rem; }
+  .kpi { padding: 8px 12px; }
+  .kpi .num { font-size: 1.3rem; }
+  .search { height: 48px; }
+  .compact-hide { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
